@@ -18,6 +18,40 @@
 
 **禁止在 commit message 中添加 Co-Authored-By 信息。**
 
+## Git 分支开发规范
+
+**绝不允许默认在主干（main/master）分支上直接开发，每个需求必须使用独立的特性分支。**
+
+### 分支策略优先级
+
+1. **Worktree 模式（优先推荐）**：使用 `git worktree add` 为新需求创建独立的工作目录，实现多分支并行开发互不干扰
+2. **普通特性分支**：在当前仓库中创建新分支进行开发
+3. **主干开发（禁止）**：不允许默认在 main/master 分支上直接修改
+
+### 执行流程
+
+1. **接到开发任务时**，首先通过 `git branch --show-current` 检测当前所在分支
+2. **如果当前在主干分支上**，必须：
+   - 主动询问用户使用 worktree 模式还是普通特性分支（也可根据项目情况推荐 worktree）
+   - 待用户确认后，创建对应的特性分支（命名建议：`feature/<需求简述>` 或 `fix/<问题简述>`）
+3. **如果已在特性分支上**，可直接在该分支上继续开发
+4. **检测 worktree 模式**：可通过 `git worktree list` 确认当前是否处于 worktree 环境中
+
+### Worktree 使用示例
+
+```bash
+# 在主仓库目录下为新需求创建 worktree
+git worktree add ../project-feature-name feature/feature-name
+
+# 开发完成后，在主仓库中清理
+git worktree remove ../project-feature-name
+```
+
+### 严格禁止
+
+- 禁止不询问用户就默认在主干分支上开发
+- 禁止在未确认分支状态的情况下直接修改代码
+
 ## 代码质量规范
 
 **每次提交代码必须确保编译通过，最好单元测试也能通过。**
